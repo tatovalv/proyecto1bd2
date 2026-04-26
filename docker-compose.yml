@@ -1,0 +1,299 @@
+# TEC Digitalito — Cassandra (3 nodos) + Redis Cluster (3 nodos) + API + frontend
+# Uso: desde la raíz del proyecto, copia .env.example → .env y ejecuta:
+#   docker compose up --build
+# El servicio redis-cluster-init corre solo al inicio (idempotente) y el backend
+# espera a que termine antes de arrancar (cluster con slots asignados).
+# Cassandra y Redis van en redes distintas (cassandra-net / redis-net): ambos
+# usan el puerto 7000 en sus contenedores; compartir red única puede provocar
+# handshakes CRC inválidos entre Cassandra y Redis en algunos entornos.
+
+# Cassandra y Redis usan el puerto 7000 por defecto (internodo vs cluster).
+# Redes separadas evitan que el tráfico interno de un stack llegue al otro.
+networks:
+  cassandra-net:
+    driver: bridge
+  redis-net:
+    driver: bridge
+  app-net:
+    driver: bridge
+
+services:
+  cassandra-node1:
+    image: cassandra:4.1
+    container_name: cassandra-node1
+    hostname: cassandra-node1
+    environment:
+      CASSANDRA_CLUSTER_NAME: tec-digitalito-cluster
+      CASSANDRA_DC: datacenter1
+      CASSANDRA_RACK: rack1
+      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+      CASSANDRA_SEEDS: cassandra-node1,cassandra-node2,cassandra-node3
+    ports:
+      - "9042:9042"
+    networks:
+      - cassandra-net
+    healthcheck:
+      test: ["CMD-SHELL", "cqlsh -e 'SHOW VERSION' >/dev/null 2>&1 || exit 1"]
+      interval: 15s
+      timeout: 15s
+      retries: 40
+      start_period: 90s
+
+  cassandra-node2:
+    image: cassandra:4.1
+    container_name: cassandra-node2
+    hostname: cassandra-node2
+    environment:
+      CASSANDRA_CLUSTER_NAME: tec-digitalito-cluster
+      CASSANDRA_DC: datacenter1
+      CASSANDRA_RACK: rack2
+      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+      CASSANDRA_SEEDS: cassandra-node1,cassandra-node2,cassandra-node3
+    depends_on:
+      cassandra-node1:
+        condition: service_healthy
+    networks:
+      - cassandra-net
+    healthcheck:
+      test: ["CMD-SHELL", "cqlsh -e 'SHOW VERSION' >/dev/null 2>&1 || exit 1"]
+      interval: 15s
+      timeout: 15s
+      retries: 40
+      start_period: 90s
+
+  cassandra-node3:
+    image: cassandra:4.1
+    container_name: cassandra-node3
+    hostname: cassandra-node3
+    environment:
+      CASSANDRA_CLUSTER_NAME: tec-digitalito-cluster
+      CASSANDRA_DC: datacenter1
+      CASSANDRA_RACK: rack3
+      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+      CASSANDRA_SEEDS: cassandra-node1,cassandra-node2,cassandra-node3
+    depends_on:
+      cassandra-node2:
+        condition: service_healthy
+    networks:
+      - cassandra-net
+    healthcheck:
+      test: ["CMD-SHELL", "cqlsh -e 'SHOW VERSION' >/dev/null 2>&1 || exit 1"]
+      interval: 15s
+      timeout: 15s
+      retries: 40
+      start_period: 90s
+
+  redis-node1:
+    image: redis:7-alpine
+    container_name: redis-node1
+    hostname: redis-node1
+    command:
+      [
+        "redis-server",
+        "--port",
+        "7000",
+        "--cluster-enabled",
+        "yes",
+        "--cluster-config-file",
+        "nodes.conf",
+        "--cluster-node-timeout",
+        "5000",
+        "--appendonly",
+        "yes",
+        "--protected-mode",
+        "no",
+        "--bind",
+        "0.0.0.0",
+        "--cluster-announce-ip",
+        "redis-node1",
+        "--cluster-announce-port",
+        "7000",
+        "--cluster-announce-bus-port",
+        "17000",
+      ]
+    ports:
+      - "7000:7000"
+      - "17000:17000"
+    networks:
+      - redis-net
+
+  redis-node2:
+    image: redis:7-alpine
+    container_name: redis-node2
+    hostname: redis-node2
+    command:
+      [
+        "redis-server",
+        "--port",
+        "7000",
+        "--cluster-enabled",
+        "yes",
+        "--cluster-config-file",
+        "nodes.conf",
+        "--cluster-node-timeout",
+        "5000",
+        "--appendonly",
+        "yes",
+        "--protected-mode",
+        "no",
+        "--bind",
+        "0.0.0.0",
+        "--cluster-announce-ip",
+        "redis-node2",
+        "--cluster-announce-port",
+        "7000",
+        "--cluster-announce-bus-port",
+        "17000",
+      ]
+    ports:
+      - "7001:7000"
+      - "17001:17000"
+    networks:
+      - redis-net
+
+  redis-node3:
+    image: redis:7-alpine
+    container_name: redis-node3
+    hostname: redis-node3
+    command:
+      [
+        "redis-server",
+        "--port",
+        "7000",
+        "--cluster-enabled",
+        "yes",
+        "--cluster-config-file",
+        "nodes.conf",
+        "--cluster-node-timeout",
+        "5000",
+        "--appendonly",
+        "yes",
+        "--protected-mode",
+        "no",
+        "--bind",
+        "0.0.0.0",
+        "--cluster-announce-ip",
+        "redis-node3",
+        "--cluster-announce-port",
+        "7000",
+        "--cluster-announce-bus-port",
+        "17000",
+      ]
+    ports:
+      - "7002:7000"
+      - "17002:17000"
+    networks:
+      - redis-net
+
+  # Init embebido (no montar .sh desde Windows): CRLF + "\" al final de línea rompen ash y dan exit 2.
+  redis-cluster-init:
+    image: redis:7-alpine
+    container_name: redis-cluster-init
+    depends_on:
+      cassandra-node1:
+        condition: service_healthy
+      redis-node1:
+        condition: service_started
+      redis-node2:
+        condition: service_started
+      redis-node3:
+        condition: service_started
+    networks:
+      - redis-net
+    restart: "no"
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -u
+        echo "redis-cluster-init: esperando PING en los tres nodos..."
+        i=0
+        while [ "$$i" -lt 60 ]; do
+          ok=0
+          if redis-cli -h redis-node1 -p 7000 PING 2>/dev/null | grep -q PONG; then
+            if redis-cli -h redis-node2 -p 7000 PING 2>/dev/null | grep -q PONG; then
+              if redis-cli -h redis-node3 -p 7000 PING 2>/dev/null | grep -q PONG; then
+                ok=1
+              fi
+            fi
+          fi
+          if [ "$$ok" -eq 1 ]; then break; fi
+          i=$$((i + 1))
+          sleep 1
+        done
+        if ! redis-cli -h redis-node1 -p 7000 PING 2>/dev/null | grep -q PONG; then
+          echo "redis-cluster-init: error — redis-node1 no respondió a tiempo." >&2
+          exit 1
+        fi
+        if redis-cli -h redis-node1 -p 7000 CLUSTER INFO 2>/dev/null | grep -q "cluster_state:ok"; then
+          echo "redis-cluster-init: cluster ya operativo (cluster_state:ok)."
+          exit 0
+        fi
+        echo "redis-cluster-init: reseteando nodos (reinicios previos / cluster a medias)..."
+        for h in redis-node1 redis-node2 redis-node3; do
+          redis-cli -h "$$h" -p 7000 CLUSTER RESET HARD 2>/dev/null || true
+        done
+        sleep 2
+        echo "redis-cluster-init: creando cluster (--cluster-yes)..."
+        set +e
+        out=$$(redis-cli --cluster-yes --cluster create redis-node1:7000 redis-node2:7000 redis-node3:7000 --cluster-replicas 0 2>&1)
+        rc=$$?
+        echo "$$out"
+        echo "redis-cluster-init: esperando convergencia de cluster_state=ok..."
+        j=0
+        while [ "$$j" -lt 30 ]; do
+          if redis-cli -h redis-node1 -p 7000 CLUSTER INFO 2>/dev/null | grep -q "cluster_state:ok"; then
+            echo "redis-cluster-init: listo (cluster_state:ok)."
+            exit 0
+          fi
+          sleep 1
+          j=$$((j + 1))
+        done
+        if [ "$$rc" -ne 0 ]; then
+          echo "redis-cluster-init: redis-cli terminó con código $$rc" >&2
+        else
+          echo "redis-cluster-init: create no dejó cluster en estado ok." >&2
+        fi
+        echo "redis-cluster-init: CLUSTER INFO (redis-node1):"
+        redis-cli -h redis-node1 -p 7000 CLUSTER INFO || true
+        echo "redis-cluster-init: CLUSTER NODES (redis-node1):"
+        redis-cli -h redis-node1 -p 7000 CLUSTER NODES || true
+        exit 1
+
+  backend:
+    build: ./backend
+    container_name: tec-backend
+    ports:
+      - "3001:3000"
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      CASSANDRA_CONTACT_POINTS: cassandra-node1
+      CASSANDRA_DATACENTER: datacenter1
+      CASSANDRA_REPLICATION_FACTOR: "3"
+      REDIS_NODES: redis-node1:7000,redis-node2:7000,redis-node3:7000
+      REDIS_MODE: cluster
+      FRONTEND_ORIGIN: http://localhost:5173
+    depends_on:
+      cassandra-node1:
+        condition: service_healthy
+      redis-cluster-init:
+        condition: service_completed_successfully
+    networks:
+      - cassandra-net
+      - redis-net
+      - app-net
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # El backend publica 3001 en el host (ver servicio backend ports).
+        VITE_API_URL: http://localhost:3001
+    container_name: tec-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - app-net
