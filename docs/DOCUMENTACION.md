@@ -3,8 +3,10 @@
 ## 1. Informacion general
 
 - **Curso:** Bases de Datos II  
+- **Alumnos:** Luna Antonella Peraza, Luis Masis Perez, Juan Carlos Valverde
+- **Profesor:** Erick Hernandez
 - **Proyecto:** Proyecto 1 — Plataforma educativa "TEC Digitalito"  
-- **Repositorio:** Proyecto local (monorepo con `backend/` y `frontend/`)  
+- **Repositorio:** Proyecto local (`backend/` y `frontend/`)  
 
 ## 2. Resumen ejecutivo
 
