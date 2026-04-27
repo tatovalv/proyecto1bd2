@@ -62,8 +62,13 @@ export default function CourseEvaluationsPage() {
   if (err) {
     return (
       <div className="space-y-3">
-        <p className="text-red-400">{err}</p>
-        <Link to={`/courses/${courseId}`} className="text-sky-400 underline">
+        <p className="text-red-300" role="alert">
+          {err}
+        </p>
+        <Link
+          to={`/courses/${courseId}`}
+          className="text-sky-300 underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded"
+        >
           Volver al curso
         </Link>
       </div>
@@ -75,11 +80,19 @@ export default function CourseEvaluationsPage() {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-sm text-slate-500">
-            <Link to="/courses/mine" className="text-sky-400 hover:underline">
+            <Link
+              to="/courses/mine"
+              className="text-sky-300 hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded"
+            >
               Mis cursos
             </Link>
-            <span className="mx-2">/</span>
-            <Link to={`/courses/${courseId}`} className="text-sky-400 hover:underline">
+            <span className="mx-2" aria-hidden="true">
+              /
+            </span>
+            <Link
+              to={`/courses/${courseId}`}
+              className="text-sky-300 hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded"
+            >
               {courseName || "Curso"}
             </Link>
             <span className="mx-2">/</span>
@@ -90,7 +103,7 @@ export default function CourseEvaluationsPage() {
         {isTeacher ? (
           <Link
             to={`/courses/${courseId}/evaluations/new`}
-            className="rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-500"
+            className="rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
           >
             Nueva evaluación
           </Link>
@@ -100,13 +113,16 @@ export default function CourseEvaluationsPage() {
       {sorted.length === 0 ? (
         <p className="text-slate-500">No hay evaluaciones en este curso.</p>
       ) : (
-        <ul className="divide-y divide-slate-800 border border-slate-800 rounded-lg overflow-hidden">
+        <ul
+          className="divide-y divide-slate-800 border border-slate-800 rounded-lg overflow-hidden"
+          aria-label={`Evaluaciones del curso ${courseName || ""}`}
+        >
           {sorted.map((ev) => (
             <li key={ev._id} className="px-4 py-3 bg-slate-900/50 flex flex-wrap items-center justify-between gap-2">
               <div>
                 <Link
                   to={`/courses/${courseId}/evaluations/${ev._id}`}
-                  className="text-white font-medium hover:text-sky-400"
+                  className="text-white font-medium hover:text-sky-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 rounded"
                 >
                   {ev.title}
                 </Link>
@@ -117,7 +133,11 @@ export default function CourseEvaluationsPage() {
                   ) : null}
                 </p>
               </div>
-              <Link to={`/courses/${courseId}/evaluations/${ev._id}`} className="text-sm text-sky-400 hover:underline">
+              <Link
+                to={`/courses/${courseId}/evaluations/${ev._id}`}
+                className="text-sm text-sky-300 hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 rounded"
+                aria-label={`Abrir evaluación ${ev.title}`}
+              >
                 Abrir →
               </Link>
             </li>

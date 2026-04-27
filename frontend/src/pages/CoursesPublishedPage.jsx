@@ -32,8 +32,13 @@ export default function CoursesPublishedPage() {
   if (err) {
     return (
       <div className="space-y-3">
-        <p className="text-red-400">{err}</p>
-        <Link to="/login" className="text-sky-400 underline">
+        <p className="text-red-300" role="alert">
+          {err}
+        </p>
+        <Link
+          to="/login"
+          className="text-sky-300 underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded"
+        >
           Iniciar sesión
         </Link>
       </div>
@@ -46,16 +51,26 @@ export default function CoursesPublishedPage() {
       {courses.length === 0 ? (
         <p className="text-slate-400">No hay cursos publicados aún.</p>
       ) : (
-        <ul className="divide-y divide-slate-800 border border-slate-800 rounded-lg overflow-hidden">
+        <ul
+          className="divide-y divide-slate-800 border border-slate-800 rounded-lg overflow-hidden"
+          aria-label="Listado de cursos publicados"
+        >
           {courses.map((c) => (
             <li key={c.id} className="px-4 py-3 bg-slate-900/50 flex flex-wrap items-center justify-between gap-2">
               <div>
-                <Link to={`/courses/${c.id}`} className="text-white font-medium hover:text-sky-400">
+                <Link
+                  to={`/courses/${c.id}`}
+                  className="text-white font-medium hover:text-sky-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 rounded"
+                >
                   {c.name}
                 </Link>
                 <p className="text-slate-500 text-sm">{c.code}</p>
               </div>
-              <Link to={`/courses/${c.id}`} className="text-sm text-sky-400 hover:underline">
+              <Link
+                to={`/courses/${c.id}`}
+                className="text-sm text-sky-300 hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 rounded"
+                aria-label={`Ver curso ${c.name}`}
+              >
                 Ver curso →
               </Link>
             </li>

@@ -33,6 +33,14 @@ async function fetchMe() {
   return fetch(apiUrl("/api/auth/me"), { headers: { ...authHeaders() }, credentials: "include" });
 }
 
+function headerNavLinkClass(isActive) {
+  return `px-3 py-1.5 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
+    isActive
+      ? "bg-sky-600 text-white focus-visible:ring-sky-800"
+      : "text-slate-800 hover:bg-slate-100 focus-visible:ring-sky-600"
+  }`;
+}
+
 function RequireRole({ session, loading, roles, children }) {
   if (!hasAccessToken()) return <Navigate to="/login" replace />;
   if (loading) return <p className="text-slate-400">Cargando…</p>;
@@ -61,32 +69,31 @@ function Layout({ children, session, loadingSession }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-app-bg">
-      <header className="border-b border-slate-200 bg-white/95 backdrop-blur">
+      <header className="relative border-b border-slate-200 bg-white/95 backdrop-blur">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-sky-600 focus:px-4 focus:py-2 focus:text-white focus:shadow-lg"
+        >
+          Saltar al contenido principal
+        </a>
         <div className="mx-auto w-full max-w-6xl px-4 py-4 flex items-center justify-between gap-4">
-          <Link to="/" className="text-lg font-semibold tracking-tight text-slate-900">
+          <Link
+            to="/"
+            className="text-lg font-semibold tracking-tight text-slate-900 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-600 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          >
             TEC Digitalito
           </Link>
           {!isLoggedIn ? (
-            <nav className="flex items-center gap-2 text-sm">
-              <NavLink
-                to="/login"
-                className={({ isActive }) =>
-                  `px-3 py-1.5 rounded-md ${isActive ? "bg-sky-600 text-white" : "text-slate-700 hover:bg-slate-100"}`
-                }
-              >
+            <nav className="flex items-center gap-2 text-sm" aria-label="Cuenta: accesos públicos">
+              <NavLink to="/login" className={({ isActive }) => headerNavLinkClass(isActive)}>
                 Iniciar sesión
               </NavLink>
-              <NavLink
-                to="/register"
-                className={({ isActive }) =>
-                  `px-3 py-1.5 rounded-md ${isActive ? "bg-sky-600 text-white" : "text-slate-700 hover:bg-slate-100"}`
-                }
-              >
+              <NavLink to="/register" className={({ isActive }) => headerNavLinkClass(isActive)}>
                 Registro
               </NavLink>
             </nav>
           ) : (
-            <nav className="flex items-center gap-2 text-sm flex-wrap justify-end">
+            <nav className="flex items-center gap-2 text-sm flex-wrap justify-end" aria-label="Navegación principal">
               {[
                 ["/dashboard", "Panel", ["student", "teacher", "admin"]],
                 ["/courses/mine", "Mis cursos", ["student", "teacher", "admin"]],
@@ -98,28 +105,18 @@ function Layout({ children, session, loadingSession }) {
               ]
                 .filter(([, , allowed]) => !loadingSession && allowed.includes(session?.role || "student"))
                 .map(([to, label]) => (
-                <NavLink
-                  key={to}
-                  to={to}
-                  className={({ isActive }) =>
-                    `px-3 py-1.5 rounded-md ${isActive ? "bg-sky-600 text-white" : "text-slate-700 hover:bg-slate-100"}`
-                  }
-                >
+                <NavLink key={to} to={to} className={({ isActive }) => headerNavLinkClass(isActive)}>
                   {label}
                 </NavLink>
                 ))}
-              <NavLink
-                to="/change-password"
-                className={({ isActive }) =>
-                  `px-3 py-1.5 rounded-md ${isActive ? "bg-sky-600 text-white" : "text-slate-700 hover:bg-slate-100"}`
-                }
-              >
+              <NavLink to="/change-password" className={({ isActive }) => headerNavLinkClass(isActive)}>
                 Contraseña
               </NavLink>
               <button
                 type="button"
                 onClick={onLogout}
-                className="px-3 py-1.5 rounded-md border border-slate-300 text-slate-700 hover:bg-slate-100"
+                aria-label="Cerrar sesión"
+                className="px-3 py-1.5 rounded-md border border-slate-400 text-slate-800 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-600 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
               >
                 Salir
               </button>
@@ -127,7 +124,9 @@ function Layout({ children, session, loadingSession }) {
           )}
         </div>
       </header>
-      <main className="flex-1 mx-auto w-full max-w-6xl px-4 py-8">{children}</main>
+      <main id="main-content" className="flex-1 mx-auto w-full max-w-6xl px-4 py-8" tabIndex={-1}>
+        {children}
+      </main>
     </div>
   );
 }

@@ -50,8 +50,13 @@ export default function CourseConsultationsPage() {
   if (err && messages.length === 0) {
     return (
       <div className="space-y-3">
-        <p className="text-red-400">{err}</p>
-        <Link to={`/courses/${courseId}`} className="text-sky-400 underline">
+        <p className="text-red-300" role="alert">
+          {err}
+        </p>
+        <Link
+          to={`/courses/${courseId}`}
+          className="text-sky-300 underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded"
+        >
           Volver al curso
         </Link>
       </div>
@@ -61,11 +66,19 @@ export default function CourseConsultationsPage() {
   return (
     <div className="space-y-6">
       <p className="text-sm text-slate-500">
-        <Link to="/courses/mine" className="text-sky-400 hover:underline">
+        <Link
+          to="/courses/mine"
+          className="text-sky-300 hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded"
+        >
           Mis cursos
         </Link>
-        <span className="mx-2">/</span>
-        <Link to={`/courses/${courseId}`} className="text-sky-400 hover:underline">
+        <span className="mx-2" aria-hidden="true">
+          /
+        </span>
+        <Link
+          to={`/courses/${courseId}`}
+          className="text-sky-300 hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded"
+        >
           {courseName || "Curso"}
         </Link>
         <span className="mx-2">/</span>
@@ -78,7 +91,7 @@ export default function CourseConsultationsPage() {
       {messages.length === 0 ? (
         <p className="text-slate-400">No hay consultas aún.</p>
       ) : (
-        <ul className="space-y-3">
+        <ul className="space-y-3" aria-label="Consultas de estudiantes del curso">
           {messages.map((m) => (
             <li key={String(m._id)} className="rounded-lg border border-slate-800 bg-slate-900/40 p-4 space-y-2">
               <div className="flex flex-wrap justify-between gap-2 text-xs text-slate-500">
@@ -89,7 +102,8 @@ export default function CourseConsultationsPage() {
               <p className="text-slate-300 text-sm whitespace-pre-wrap">{m.body}</p>
               <Link
                 to="/messages"
-                className="inline-block text-sm text-sky-400 hover:underline"
+                className="inline-block text-sm text-sky-300 hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 rounded"
+                aria-label="Ir a la bandeja de mensajes para responder"
               >
                 Responder desde bandeja →
               </Link>

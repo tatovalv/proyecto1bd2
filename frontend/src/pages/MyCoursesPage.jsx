@@ -46,8 +46,13 @@ export default function MyCoursesPage() {
   if (err) {
     return (
       <div className="space-y-3">
-        <p className="text-red-400">{err}</p>
-        <Link to="/login" className="text-sky-400 underline">
+        <p className="text-red-300" role="alert">
+          {err}
+        </p>
+        <Link
+          to="/login"
+          className="text-sky-300 underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded"
+        >
           Iniciar sesión
         </Link>
       </div>
@@ -58,32 +63,40 @@ export default function MyCoursesPage() {
     <div className="space-y-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold text-white">Mis cursos</h1>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Acciones de cursos">
           <Link
             to="/courses/new"
-            className="rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-500"
+            className="rounded-lg bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
           >
             Nuevo curso
           </Link>
           <Link
             to="/courses/published"
-            className="rounded-lg border border-slate-600 px-4 py-2 text-sm text-slate-100 hover:bg-slate-800"
+            className="rounded-lg border border-slate-500 px-4 py-2 text-sm text-slate-100 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
           >
             Catálogo publicado
           </Link>
         </div>
       </div>
 
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-slate-200">Como docente</h2>
+      <section className="space-y-3" aria-labelledby="my-courses-teaching-heading">
+        <h2 id="my-courses-teaching-heading" className="text-lg font-semibold text-slate-200">
+          Como docente
+        </h2>
         {teaching.length === 0 ? (
           <p className="text-slate-500 text-sm">Aún no creas cursos. Usa «Nuevo curso».</p>
         ) : (
-          <ul className="divide-y divide-slate-800 border border-slate-800 rounded-lg overflow-hidden">
+          <ul
+            className="divide-y divide-slate-800 border border-slate-800 rounded-lg overflow-hidden"
+            aria-labelledby="my-courses-teaching-heading"
+          >
             {teaching.map((c) => (
               <li key={c.id} className="px-4 py-3 bg-slate-900/50 flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <Link to={`/courses/${c.id}`} className="text-white font-medium hover:text-sky-400">
+                  <Link
+                    to={`/courses/${c.id}`}
+                    className="text-white font-medium hover:text-sky-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 rounded"
+                  >
                     {c.name}
                   </Link>
                   <p className="text-slate-500 text-sm">
@@ -100,7 +113,8 @@ export default function MyCoursesPage() {
                 </div>
                 <Link
                   to={`/courses/${c.id}`}
-                  className="text-sm text-sky-400 hover:underline"
+                  className="text-sm text-sky-300 hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 rounded"
+                  aria-label={`Gestionar curso ${c.name}`}
                 >
                   Gestionar →
                 </Link>
@@ -110,21 +124,33 @@ export default function MyCoursesPage() {
         )}
       </section>
 
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold text-slate-200">Matriculado</h2>
+      <section className="space-y-3" aria-labelledby="my-courses-enrolled-heading">
+        <h2 id="my-courses-enrolled-heading" className="text-lg font-semibold text-slate-200">
+          Matriculado
+        </h2>
         {enrolled.length === 0 ? (
           <p className="text-slate-500 text-sm">No estás matriculado en ningún curso.</p>
         ) : (
-          <ul className="divide-y divide-slate-800 border border-slate-800 rounded-lg overflow-hidden">
+          <ul
+            className="divide-y divide-slate-800 border border-slate-800 rounded-lg overflow-hidden"
+            aria-labelledby="my-courses-enrolled-heading"
+          >
             {enrolled.map((c) => (
               <li key={c.id} className="px-4 py-3 bg-slate-900/50 flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <Link to={`/courses/${c.id}`} className="text-white font-medium hover:text-sky-400">
+                  <Link
+                    to={`/courses/${c.id}`}
+                    className="text-white font-medium hover:text-sky-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 rounded"
+                  >
                     {c.name}
                   </Link>
                   <p className="text-slate-500 text-sm">{c.code}</p>
                 </div>
-                <Link to={`/courses/${c.id}`} className="text-sm text-sky-400 hover:underline">
+                <Link
+                  to={`/courses/${c.id}`}
+                  className="text-sm text-sky-300 hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 rounded"
+                  aria-label={`Abrir curso ${c.name}`}
+                >
                   Abrir →
                 </Link>
               </li>

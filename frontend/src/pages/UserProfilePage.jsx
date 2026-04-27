@@ -152,8 +152,13 @@ export default function UserProfilePage() {
   if (err && !user) {
     return (
       <div className="space-y-3">
-        <p className="text-red-400">{err}</p>
-        <Link to="/people" className="text-sky-400 underline">
+        <p className="text-red-300" role="alert">
+          {err}
+        </p>
+        <Link
+          to="/people"
+          className="text-sky-300 underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded"
+        >
           Volver a personas
         </Link>
       </div>
@@ -165,7 +170,10 @@ export default function UserProfilePage() {
   return (
     <div className="space-y-6">
       <p className="text-sm text-slate-500">
-        <Link to="/people" className="text-sky-400 hover:underline">
+        <Link
+          to="/people"
+          className="text-sky-300 hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded"
+        >
           Personas
         </Link>
         <span className="mx-2">/</span>
@@ -181,11 +189,15 @@ export default function UserProfilePage() {
         </div>
         {!isSelf ? (
           <div className="flex flex-col items-end gap-2">
-            {actionMsg ? <p className="text-sm text-emerald-400">{actionMsg}</p> : null}
+            {actionMsg ? (
+              <p className="text-sm text-emerald-300" role="status" aria-live="polite">
+                {actionMsg}
+              </p>
+            ) : null}
             {isFriend ? (
               <Link
                 to={`/messages/compose?to=${encodeURIComponent(user.id)}`}
-                className="rounded-lg border border-slate-600 px-3 py-2 text-sm text-slate-100 hover:bg-slate-800"
+                className="rounded-lg border border-slate-500 px-3 py-2 text-sm text-slate-100 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
               >
                 Enviar mensaje
               </Link>
@@ -195,14 +207,14 @@ export default function UserProfilePage() {
                 <button
                   type="button"
                   onClick={() => respond("accept")}
-                  className="rounded-md bg-emerald-600 px-3 py-2 text-sm text-white hover:bg-emerald-500"
+                  className="rounded-md bg-emerald-600 px-3 py-2 text-sm text-white hover:bg-emerald-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
                 >
                   Aceptar amistad
                 </button>
                 <button
                   type="button"
                   onClick={() => respond("reject")}
-                  className="rounded-md border border-slate-600 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800"
+                  className="rounded-md border border-slate-500 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
                 >
                   Rechazar
                 </button>
@@ -212,7 +224,7 @@ export default function UserProfilePage() {
               <button
                 type="button"
                 onClick={sendFriendRequest}
-                className="rounded-lg bg-sky-600 px-4 py-2 text-sm text-white hover:bg-sky-500"
+                className="rounded-lg bg-sky-600 px-4 py-2 text-sm text-white hover:bg-sky-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
               >
                 Solicitar amistad
               </button>
@@ -227,22 +239,31 @@ export default function UserProfilePage() {
       </div>
 
       {isFriend && Array.isArray(friendCourses) ? (
-        <section className="rounded-lg border border-slate-800 bg-slate-900/40 p-4 space-y-2">
-          <h2 className="text-lg font-semibold text-slate-200">Cursos de tu amigo</h2>
+        <section className="rounded-lg border border-slate-800 bg-slate-900/40 p-4 space-y-2" aria-labelledby="profile-friend-courses-heading">
+          <h2 id="profile-friend-courses-heading" className="text-lg font-semibold text-slate-200">
+            Cursos de tu amigo
+          </h2>
           {friendCourses.length === 0 ? (
             <p className="text-slate-500 text-sm">No tiene cursos visibles.</p>
           ) : (
-            <ul className="divide-y divide-slate-800 border border-slate-800 rounded-md overflow-hidden">
+            <ul
+              className="divide-y divide-slate-800 border border-slate-800 rounded-md overflow-hidden"
+              aria-labelledby="profile-friend-courses-heading"
+            >
               {friendCourses.map((c) => (
-                <li key={c.id} className="px-3 py-2 bg-slate-950/40 flex justify-between gap-2">
-                  <span className="text-white">{c.name}</span>
-                  <span className="text-slate-500 text-sm">{c.code}</span>
+                <li key={c.id} className="px-3 py-2 bg-slate-950/40 flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-white font-medium">{c.name}</span>
+                  <span className="text-slate-400 text-sm">{c.code}</span>
                   {c.published ? (
-                    <Link to={`/courses/${c.id}`} className="text-sky-400 text-sm hover:underline shrink-0">
+                    <Link
+                      to={`/courses/${c.id}`}
+                      className="text-sky-300 text-sm hover:underline underline-offset-2 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 rounded"
+                      aria-label={`Ver curso ${c.name}`}
+                    >
                       Ver
                     </Link>
                   ) : (
-                    <span className="text-amber-600 text-xs shrink-0">Borrador</span>
+                    <span className="text-amber-400 text-xs shrink-0">Borrador</span>
                   )}
                 </li>
               ))}

@@ -144,7 +144,10 @@ export default function CourseEvaluationDetailPage() {
     return (
       <div className="space-y-3">
         <p className="text-red-400">{err || "Evaluación no encontrada."}</p>
-        <Link to={`/courses/${courseId}/evaluations`} className="text-sky-400 underline">
+        <Link
+          to={`/courses/${courseId}/evaluations`}
+          className="text-sky-300 underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded"
+        >
           Volver al listado
         </Link>
       </div>
@@ -161,20 +164,35 @@ export default function CourseEvaluationDetailPage() {
     <div className="space-y-8">
       <div>
         <p className="text-sm text-slate-500">
-          <Link to="/courses/mine" className="text-sky-400 hover:underline">
+          <Link
+            to="/courses/mine"
+            className="text-sky-300 hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded"
+          >
             Mis cursos
           </Link>
-          <span className="mx-2">/</span>
-          <Link to={`/courses/${courseId}`} className="text-sky-400 hover:underline">
+          <span className="mx-2" aria-hidden="true">
+            /
+          </span>
+          <Link
+            to={`/courses/${courseId}`}
+            className="text-sky-300 hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded"
+          >
             {courseName || "Curso"}
           </Link>
-          <span className="mx-2">/</span>
-          <Link to={`/courses/${courseId}/evaluations`} className="text-sky-400 hover:underline">
+          <span className="mx-2" aria-hidden="true">
+            /
+          </span>
+          <Link
+            to={`/courses/${courseId}/evaluations`}
+            className="text-sky-300 hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 rounded"
+          >
             Evaluaciones
           </Link>
         </p>
-        <h1 className="text-2xl font-bold text-white mt-2">{evaluation.title}</h1>
-        <p className="text-slate-500 text-sm mt-1">
+        <h1 id="eval-detail-title" className="text-2xl font-bold text-white mt-2">
+          {evaluation.title}
+        </h1>
+        <p id="eval-detail-window" className="text-slate-300 text-sm mt-1">
           Ventana: {fmt(evaluation.startDate)} — {fmt(evaluation.endDate)}
         </p>
       </div>
@@ -211,12 +229,18 @@ export default function CourseEvaluationDetailPage() {
               <p className="text-slate-500 text-sm">Aún no hay envíos.</p>
             ) : (
               <div className="overflow-x-auto border border-slate-800 rounded-lg">
-                <table className="w-full text-sm text-left text-slate-300">
+                <table className="w-full text-sm text-left text-slate-300" aria-label="Entregas de estudiantes">
                   <thead className="bg-slate-900/80 text-slate-400">
                     <tr>
-                      <th className="px-3 py-2">Estudiante</th>
-                      <th className="px-3 py-2">Score</th>
-                      <th className="px-3 py-2">Enviado</th>
+                      <th scope="col" className="px-3 py-2">
+                        Estudiante
+                      </th>
+                      <th scope="col" className="px-3 py-2">
+                        Score
+                      </th>
+                      <th scope="col" className="px-3 py-2">
+                        Enviado
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800">
@@ -248,35 +272,54 @@ export default function CourseEvaluationDetailPage() {
             : "El periodo de esta evaluación ya cerró y no consta un envío tuyo."}
         </p>
       ) : (
-        <form onSubmit={onSubmit} className="space-y-6">
+        <form
+          onSubmit={onSubmit}
+          className="space-y-6"
+          aria-labelledby="eval-detail-title"
+          aria-describedby={submitMsg ? "eval-submit-msg eval-detail-window" : "eval-detail-window"}
+        >
           {submitMsg ? (
-            <p className={submitMsg.startsWith("Enviado") ? "text-emerald-400" : "text-amber-400"}>{submitMsg}</p>
+            <p
+              id="eval-submit-msg"
+              role={submitMsg.startsWith("Enviado") ? "status" : "alert"}
+              aria-live={submitMsg.startsWith("Enviado") ? "polite" : "assertive"}
+              className={submitMsg.startsWith("Enviado") ? "text-emerald-300" : "text-amber-300"}
+            >
+              {submitMsg}
+            </p>
           ) : null}
-          <ol className="space-y-6 list-decimal list-inside marker:text-slate-500">
-            {questions.map((q) => (
-              <li key={q.id} className="rounded-lg border border-slate-800 bg-slate-900/40 p-4 space-y-3">
-                <p className="text-white font-medium">{q.text}</p>
-                <div className="space-y-2 pl-0 sm:pl-2">
-                  {(q.options || []).map((o) => (
-                    <label key={o.id} className="flex items-center gap-2 text-slate-300 cursor-pointer">
-                      <input
-                        type="radio"
-                        name={`q-${q.id}`}
-                        checked={answers[q.id] === o.id}
-                        onChange={() => setAnswers((a) => ({ ...a, [q.id]: o.id }))}
-                        className="accent-sky-500"
-                      />
-                      <span>{o.text}</span>
-                    </label>
-                  ))}
-                </div>
+          <ol className="space-y-6 list-decimal list-inside marker:text-slate-400">
+            {questions.map((q, qi) => (
+              <li key={q.id}>
+                <fieldset className="rounded-lg border border-slate-800 bg-slate-900/40 p-4 space-y-3 text-left">
+                  <legend className="text-base font-medium text-white px-1">
+                    <span className="sr-only">Pregunta {qi + 1}. </span>
+                    {q.text}
+                  </legend>
+                  <div className="space-y-2 pl-0 sm:pl-2" role="radiogroup" aria-label={`Respuestas: ${q.text}`}>
+                    {(q.options || []).map((o) => (
+                      <label key={o.id} className="flex items-center gap-2 text-slate-200 cursor-pointer">
+                        <input
+                          type="radio"
+                          name={`q-${q.id}`}
+                          checked={answers[q.id] === o.id}
+                          onChange={() => setAnswers((a) => ({ ...a, [q.id]: o.id }))}
+                          className="accent-sky-500 h-4 w-4 focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-slate-900"
+                        />
+                        <span>{o.text}</span>
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
               </li>
             ))}
           </ol>
           <button
             type="submit"
             disabled={submitting || questions.length === 0}
-            className="rounded-lg bg-sky-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-sky-500 disabled:opacity-50"
+            aria-busy={submitting}
+            aria-label={submitting ? "Enviando respuestas, espere" : "Enviar respuestas de la evaluación"}
+            className="rounded-lg bg-sky-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-sky-500 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
           >
             {submitting ? "Enviando…" : "Enviar respuestas"}
           </button>

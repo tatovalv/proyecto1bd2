@@ -55,91 +55,116 @@ export default function LoginPage() {
     }
   }
 
+  const fieldDescribedBy = [
+    "login-help",
+    hasError ? "login-error" : null,
+    hasSuccess ? "login-success" : null,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
     <div className="max-w-md">
-      <div className="rounded-xl border border-slate-200 bg-white p-6">
-      <h1 className="text-2xl font-bold text-white mb-2">Iniciar sesión</h1>
-      <p id="login-help" className="text-slate-300 text-sm mb-6">
-        Ingresa con tu usuario y contraseña para acceder a tu panel.
-      </p>
-      <form onSubmit={onSubmit} className="space-y-4" aria-describedby="login-help">
-        <div>
-          <label htmlFor="login-username" className="block text-sm text-slate-100 mb-1">
-            Usuario
-          </label>
-          <input
-            id="login-username"
-            className="w-full rounded-md border border-slate-600 bg-slate-900 px-3 py-2 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-400"
-            name="username"
-            autoComplete="username"
-            autoCapitalize="none"
-            spellCheck={false}
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            aria-required="true"
-            aria-invalid={hasError}
-            aria-describedby={hasError ? "login-error" : "login-help"}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="login-password" className="block text-sm text-slate-100 mb-1">
-            Contraseña
-          </label>
-          <input
-            id="login-password"
-            type="password"
-            className="w-full rounded-md border border-slate-600 bg-slate-900 px-3 py-2 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-400"
-            name="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            aria-required="true"
-            aria-invalid={hasError}
-            aria-describedby={hasError ? "login-error" : "login-help"}
-            required
-          />
-        </div>
-        <label htmlFor="login-remember" className="flex items-center gap-2 text-sm text-slate-200 cursor-pointer">
-          <input
-            id="login-remember"
-            type="checkbox"
-            checked={rememberMe}
-            onChange={(e) => setRememberMe(e.target.checked)}
-            className="rounded border-slate-600"
-            aria-describedby="remember-help"
-          />
-          Recordarme en este equipo
-        </label>
-        <p id="remember-help" className="text-xs text-slate-400">
-          Solo actívalo en un dispositivo de confianza.
+      <section
+        className="rounded-xl border border-slate-600 bg-slate-900 p-6 shadow-lg"
+        aria-labelledby="login-heading"
+      >
+        <h1 id="login-heading" className="text-2xl font-bold text-white mb-2">
+          Iniciar sesión
+        </h1>
+        <p id="login-help" className="text-slate-200 text-sm mb-6">
+          Ingresa con tu usuario y contraseña para acceder a tu panel.
         </p>
-        {error ? (
-          <p id="login-error" className="text-sm text-red-300" role="alert" aria-live="assertive">
-            {error}
-          </p>
-        ) : null}
-        {success ? (
-          <p id="login-success" className="text-sm text-emerald-300" role="status" aria-live="polite">
-            {success}
-          </p>
-        ) : null}
-        <button
-          type="submit"
-          disabled={loading}
-          aria-busy={loading}
-          aria-describedby={hasError ? "login-error" : hasSuccess ? "login-success" : "login-help"}
-          className="w-full rounded-lg bg-sky-600 py-2.5 text-sm font-medium text-white hover:bg-sky-500 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300"
+        <form
+          onSubmit={onSubmit}
+          className="space-y-4"
+          aria-labelledby="login-heading"
+          aria-describedby="login-help"
         >
-          {loading ? "Enviando…" : "Entrar"}
-        </button>
-        <div className="pt-1 text-sm">
-          <Link to="/forgot-password" className="text-sky-600 hover:underline">
-            ¿Olvidaste tu contraseña?
-          </Link>
-        </div>
-      </form>
-      </div>
+          <div>
+            <label htmlFor="login-username" className="block text-sm font-medium text-slate-100 mb-1">
+              Usuario
+            </label>
+            <input
+              id="login-username"
+              className="w-full rounded-md border border-slate-500 bg-slate-950 px-3 py-2 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-slate-900"
+              name="username"
+              autoComplete="username"
+              autoCapitalize="none"
+              spellCheck={false}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              aria-required="true"
+              aria-invalid={hasError}
+              aria-describedby={fieldDescribedBy}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="login-password" className="block text-sm font-medium text-slate-100 mb-1">
+              Contraseña
+            </label>
+            <input
+              id="login-password"
+              type="password"
+              className="w-full rounded-md border border-slate-500 bg-slate-950 px-3 py-2 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-slate-900"
+              name="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              aria-required="true"
+              aria-invalid={hasError}
+              aria-describedby={fieldDescribedBy}
+              required
+            />
+          </div>
+          <div className="flex items-start gap-2">
+            <input
+              id="login-remember"
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className="mt-1 rounded border-slate-500 text-sky-600 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-slate-900"
+              aria-describedby="remember-help"
+            />
+            <label htmlFor="login-remember" className="text-sm text-slate-200 cursor-pointer leading-snug">
+              Recordarme en este equipo
+            </label>
+          </div>
+          <p id="remember-help" className="text-xs text-slate-300 -mt-2">
+            Solo actívalo en un dispositivo de confianza.
+          </p>
+          {error ? (
+            <p id="login-error" className="text-sm text-red-300" role="alert" aria-live="assertive">
+              {error}
+            </p>
+          ) : null}
+          {success ? (
+            <p id="login-success" className="text-sm text-emerald-300" role="status" aria-live="polite">
+              {success}
+            </p>
+          ) : null}
+          <button
+            type="submit"
+            disabled={loading}
+            aria-busy={loading}
+            aria-label={loading ? "Iniciando sesión, espere" : "Iniciar sesión"}
+            aria-describedby={hasError ? "login-error" : hasSuccess ? "login-success" : "login-help"}
+            className="w-full rounded-lg bg-sky-600 py-2.5 text-sm font-medium text-white hover:bg-sky-500 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+          >
+            {loading ? "Enviando…" : "Entrar"}
+          </button>
+          <div className="pt-1 text-sm">
+            <Link
+              to="/forgot-password"
+              className="text-sky-300 underline underline-offset-2 hover:text-sky-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 rounded"
+              aria-label="Ir a recuperación de contraseña"
+            >
+              ¿Olvidaste tu contraseña?
+            </Link>
+          </div>
+        </form>
+      </section>
     </div>
   );
 }

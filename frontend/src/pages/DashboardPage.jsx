@@ -42,8 +42,13 @@ export default function DashboardPage() {
   if (err) {
     return (
       <div className="space-y-4">
-        <p className="text-red-400">{err}</p>
-        <Link to="/login" className="text-sky-400 underline">
+        <p className="text-red-300" role="alert">
+          {err}
+        </p>
+        <Link
+          to="/login"
+          className="text-sky-300 underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 rounded"
+        >
           Ir a login
         </Link>
       </div>
@@ -87,49 +92,76 @@ export default function DashboardPage() {
           type="button"
           onClick={onRefreshSession}
           disabled={refreshing}
-          className="rounded-md bg-slate-700 px-3 py-1.5 text-slate-100 hover:bg-slate-600 disabled:opacity-50"
+          aria-busy={refreshing}
+          aria-label={refreshing ? "Renovando token de sesión" : "Renovar sesión (token de acceso)"}
+          className="rounded-md bg-slate-700 px-3 py-1.5 text-slate-100 hover:bg-slate-600 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
         >
           {refreshing ? "Renovando…" : "Renovar sesión"}
         </button>
         {refreshMsg ? (
-          <span className={refreshMsg.includes("correctamente") ? "text-emerald-400" : "text-amber-400"}>
+          <span
+            role="status"
+            aria-live="polite"
+            className={refreshMsg.includes("correctamente") ? "text-emerald-300" : "text-amber-300"}
+          >
             {refreshMsg}
           </span>
         ) : null}
       </div>
-      <ul className="list-disc list-inside text-slate-400 text-sm space-y-1">
+      <ul className="list-disc list-inside text-slate-300 text-sm space-y-2 pl-1" aria-label="Accesos rápidos del panel">
         <li>
-          <Link className="text-sky-400 hover:underline" to="/courses/mine">
+          <Link
+            className="text-sky-300 hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 rounded"
+            to="/courses/mine"
+          >
             Mis cursos (docente / matriculados)
           </Link>
         </li>
         <li>
-          <Link className="text-sky-400 hover:underline" to="/courses/published">
+          <Link
+            className="text-sky-300 hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 rounded"
+            to="/courses/published"
+          >
             Catálogo de cursos publicados
           </Link>
         </li>
         <li>
-          <Link className="text-sky-400 hover:underline" to="/people">
+          <Link
+            className="text-sky-300 hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 rounded"
+            to="/people"
+          >
             Buscar personas y amigos
           </Link>
         </li>
         <li>
-          <Link className="text-sky-400 hover:underline" to={`/users/${me.id}`}>
+          <Link
+            className="text-sky-300 hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 rounded"
+            to={`/users/${me.id}`}
+          >
             Mi perfil público
           </Link>
         </li>
         <li>
-          <Link className="text-sky-400 hover:underline" to="/messages">
+          <Link
+            className="text-sky-300 hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 rounded"
+            to="/messages"
+          >
             Mensajes (bandeja)
           </Link>
         </li>
         <li>
-          <Link className="text-sky-400 hover:underline" to="/messages/compose">
+          <Link
+            className="text-sky-300 hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 rounded"
+            to="/messages/compose"
+          >
             Redactar mensaje directo
           </Link>
         </li>
         <li>
-          <Link className="text-sky-400 hover:underline" to="/admin/activity">
+          <Link
+            className="text-sky-300 hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 rounded"
+            to="/admin/activity"
+          >
             Bitácora (solo admin)
           </Link>
         </li>
