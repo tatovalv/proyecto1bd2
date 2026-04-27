@@ -40,13 +40,6 @@ Validar estado:
 docker compose ps
 ```
 
-Checklist:
-
-- [ ] `cassandra-node1/2/3` en estado healthy/up.
-- [ ] `redis-node1/2/3` levantados.
-- [ ] `redis-cluster-init` completó sin error.
-- [ ] `tec-backend` y `tec-frontend` levantados (si corres stack completo por Docker).
-
 ## 4. Correr backend y frontend en modo desarrollo local
 
 ### 4.1 Backend
@@ -57,13 +50,6 @@ npm install
 npm run dev
 ```
 
-Checklist backend:
-
-- [ ] Log `Cassandra listo`.
-- [ ] Log `Neo4j listo`.
-- [ ] Log `Redis listo`.
-- [ ] Log `MongoDB conectado`.
-- [ ] Log `TEC Digitalito API -> http://localhost:<puerto>`.
 
 ### 4.2 Frontend
 
@@ -72,42 +58,3 @@ cd frontend
 npm install
 npm run dev
 ```
-
-Checklist frontend:
-
-- [ ] Vite levanta en `http://localhost:5173`.
-- [ ] Sin errores de proxy (`ECONNRESET`/`ECONNREFUSED`).
-
-## 5. Pruebas mínimas de funcionamiento
-
-- [ ] `GET /api/health` responde 200.
-- [ ] Registro de usuario exitoso.
-- [ ] Login exitoso y acceso al dashboard.
-- [ ] Logout exitoso.
-- [ ] Recuperación de contraseña responde mensaje genérico sin romper frontend.
-
-Prueba rápida health:
-
-```powershell
-curl http://localhost:3000/api/health
-```
-
-## 6. Solución de problemas comunes
-
-### 6.1 Puerto ocupado
-
-Síntoma: backend cambia de `3000` a `3005`.
-
-- [ ] Cerrar procesos Node duplicados.
-- [ ] Dejar solo un `npm run dev` del backend.
-
-### 6.2 Redis cluster no converge
-
-- [ ] Revisar logs: `docker compose logs redis-cluster-init --tail=200`.
-- [ ] Confirmar `cluster_state:ok`.
-
-### 6.3 Frontend no conecta backend
-
-- [ ] Confirmar puerto real del backend en consola.
-- [ ] Revisar `frontend/vite.config.js` y `VITE_API_URL` si aplica.
-

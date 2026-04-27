@@ -1,69 +1,89 @@
 # Manual de uso — Estudiante
 
-Guía para validar las funciones del rol `student`.
+Este documento describe el uso de la aplicacion desde la perspectiva del rol `student`.
 
-## 1. Precondiciones
+## 1. Inicio de sesion
 
-- [ ] Sistema levantado correctamente.
-- [ ] Cuenta con rol `student`.
-- [ ] Existe al menos un curso publicado.
+1. Ingresar a la pantalla de login.
+2. Escribir usuario y contraseña.
+3. Presionar **Entrar**.
 
-## 2. Checklist de acceso
+Despues de autenticarse, el estudiante puede navegar por:
 
-- [ ] Login exitoso.
-- [ ] Menú muestra opciones de estudiante (catálogo, mis cursos, mensajes, personas).
-- [ ] Menú no muestra opciones de Admin.
-- [ ] Rutas de profesor/admin no accesibles.
+- `Panel`
+- `Mis cursos`
+- `Catálogo`
+- `Personas`
+- `Mensajes`
+- `Contraseña`
 
-## 3. Pruebas funcionales obligatorias
+## 2. Catálogo y matrícula
 
-### 3.1 Ver catálogo y matricularse
+1. Entrar a **Catálogo**.
+2. Seleccionar un curso publicado.
+3. Abrir el detalle del curso.
+4. Presionar la opcion de **matricularse**.
 
-- [ ] Entrar al catálogo de cursos publicados.
-- [ ] Abrir detalle de un curso publicado.
-- [ ] Matricularse exitosamente.
-- [ ] Ver curso en "Mis cursos".
+El curso matriculado pasa a mostrarse en **Mis cursos**.
 
-### 3.2 Navegar contenido
+## 3. Consumo de contenido del curso
 
-- [ ] Ver secciones del curso matriculado.
-- [ ] Abrir contenido asociado en secciones.
+Desde el detalle de un curso matriculado, el estudiante puede:
 
-### 3.3 Evaluaciones
+- Ver secciones y subsecciones.
+- Revisar contenido asociado (texto, enlaces, documentos e imagenes).
+- Consultar informacion general del curso.
 
-- [ ] Abrir una evaluación del curso.
-- [ ] Enviar respuestas.
-- [ ] Ver resultado propio.
+## 4. Evaluaciones
 
-### 3.4 Consultas al docente
+Dentro del curso, el estudiante puede:
 
-- [ ] Enviar mensaje de consulta de curso (`course_query`).
-- [ ] Confirmar que aparece en bandeja de enviados.
+1. Abrir una evaluacion disponible.
+2. Completar respuestas.
+3. Enviar la evaluacion.
+4. Consultar su resultado individual.
 
-### 3.5 Perfil y social
+## 5. Consultas al docente
 
-- [ ] Buscar usuarios.
-- [ ] Enviar solicitud de amistad.
-- [ ] Aceptar/rechazar solicitud en otra cuenta de prueba.
-- [ ] Ver cursos de amigo (solo si son amigos).
+El estudiante puede enviar consultas sobre un curso al docente correspondiente:
 
-### 3.6 Recuperación de contraseña
+1. Abrir el curso.
+2. Usar la opcion de consulta/mensaje.
+3. Redactar y enviar.
+4. Consultar el historial en **Mensajes** (enviados o conversacion relacionada).
 
-- [ ] Solicitar `forgot-password` con usuario que tenga correo.
-- [ ] Completar `reset-password` con token válido.
-- [ ] Iniciar sesión con la nueva contraseña.
+## 6. Modulo social y perfil
 
-## 4. Pruebas de seguridad del rol
+En la seccion **Personas**, el estudiante puede:
 
-- [ ] `student` no puede crear curso.
-- [ ] `student` no puede publicar curso.
-- [ ] `student` no puede crear evaluaciones.
-- [ ] `student` no accede a `/admin/activity`.
+- Buscar otros usuarios.
+- Enviar solicitudes de amistad.
+- Aceptar o rechazar solicitudes recibidas.
+- Ver perfiles publicos.
 
-## 5. Evidencias sugeridas
+Cuando exista amistad, puede consultar cursos asociados al usuario amigo.
 
-- [ ] Captura de matrícula.
-- [ ] Captura de evaluación enviada y resultado.
-- [ ] Captura de consulta enviada al docente.
-- [ ] Captura de 403 en ruta de profesor/admin.
+## 7. Mensajeria
+
+En **Mensajes**, el estudiante puede:
+
+- Revisar bandeja de entrada.
+- Ver enviados.
+- Redactar mensajes directos.
+- Responder conversaciones.
+
+## 8. Gestion de contraseña
+
+El estudiante dispone de:
+
+- **Cambio de contraseña** (si tiene sesion activa).
+- **Recuperación de contraseña** (si no puede ingresar), mediante flujo de correo y token.
+
+## 9. Restricciones del rol estudiante
+
+El rol `student` no tiene permisos para:
+
+- Crear, editar o publicar cursos.
+- Crear evaluaciones.
+- Acceder a la seccion administrativa de bitacora.
 

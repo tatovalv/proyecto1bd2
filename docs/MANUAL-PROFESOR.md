@@ -1,67 +1,86 @@
 # Manual de uso — Profesor
 
-Guía para validar las funciones del rol `teacher`.
+Este documento describe el uso de la aplicacion desde la perspectiva del rol `teacher`.
 
-## 1. Precondiciones
+## 1. Inicio de sesion
 
-- [ ] El sistema está levantado (ver `docs/MANUAL-LEVANTAMIENTO.md`).
-- [ ] La cuenta tiene rol `teacher` (o `admin`).
-- [ ] Existen datos de prueba o se crearán durante el flujo.
+1. Ingresar a login.
+2. Escribir credenciales del profesor.
+3. Presionar **Entrar**.
 
-## 2. Checklist de acceso
+Luego de autenticarse, el profesor dispone de:
 
-- [ ] Login exitoso.
-- [ ] Menú muestra opciones de profesor (crear curso, consultas de curso, evaluaciones).
-- [ ] No se muestra el menú Admin si no es `admin`.
+- `Panel`
+- `Mis cursos`
+- `Crear curso`
+- `Catálogo`
+- `Personas`
+- `Mensajes`
+- `Contraseña`
 
-## 3. Pruebas funcionales obligatorias
+## 2. Creacion y administracion de cursos
 
-### 3.1 Crear curso
+### 2.1 Crear curso
 
-- [ ] Ir a "Crear curso".
-- [ ] Crear curso con datos válidos.
-- [ ] Validar que aparece en "Mis cursos".
+1. Entrar a **Crear curso**.
+2. Completar datos del curso (codigo, nombre, descripcion, fechas, etc.).
+3. Guardar.
 
-Resultado esperado:
+El curso aparece en **Mis cursos** como curso del profesor.
 
-- [ ] Curso creado en Neo4j.
-- [ ] Documento de contenido inicial creado en MongoDB.
+### 2.2 Editar curso
 
-### 3.2 Editar y publicar curso
+1. Ir a **Mis cursos**.
+2. Abrir el detalle del curso.
+3. Editar informacion general.
+4. Guardar cambios.
 
-- [ ] Editar nombre/descripcion/fechas.
-- [ ] Publicar curso.
-- [ ] Verificar que aparece en catálogo publicado.
+### 2.3 Publicar curso
 
-### 3.3 Gestionar secciones y contenido
+1. Abrir detalle del curso.
+2. Usar la accion de publicar.
+3. Verificar que el curso este visible en **Catálogo**.
 
-- [ ] Crear sección.
-- [ ] Editar sección.
-- [ ] Agregar contenido (`text`, `video`, `document`, `image`).
+## 3. Gestion de contenido
 
-### 3.4 Evaluaciones
+En el detalle de curso, el profesor puede:
 
-- [ ] Crear evaluación.
-- [ ] Ver listado de evaluaciones del curso.
-- [ ] Ver resultados agregados de evaluación.
+- Crear secciones y subsecciones.
+- Reordenar y ajustar estructura.
+- Agregar contenido de distintos tipos:
+  - texto
+  - video
+  - documento
+  - imagen
 
-### 3.5 Consultas del curso
+## 4. Evaluaciones
 
-- [ ] Abrir bandeja de consultas del curso.
-- [ ] Ver mensajes `course_query` enviados por estudiantes.
-- [ ] Responder al menos una consulta.
+Desde el curso, el profesor puede:
 
-## 4. Pruebas de seguridad del rol
+1. Crear nuevas evaluaciones.
+2. Definir preguntas y opciones.
+3. Publicar/disponer evaluaciones para estudiantes.
+4. Consultar resultados enviados por estudiantes.
 
-- [ ] Un usuario `student` no puede crear/editar/publicar cursos.
-- [ ] Un usuario `student` no puede crear evaluación.
-- [ ] Endpoint responde `403` en intentos no autorizados.
+## 5. Consultas del curso y mensajeria
 
-## 5. Evidencias sugeridas para entrega
+El profesor puede atender consultas de estudiantes asociadas a sus cursos:
 
-- [ ] Captura de creación de curso.
-- [ ] Captura de publicación.
-- [ ] Captura de evaluación creada.
-- [ ] Captura de consultas del curso.
-- [ ] Evidencia de bloqueo 403 para rol incorrecto.
+1. Abrir la vista de consultas del curso.
+2. Revisar mensajes recibidos.
+3. Responder consultas.
+
+Adicionalmente, en **Mensajes**, puede:
+
+- Enviar mensajes directos.
+- Ver bandeja de entrada y enviados.
+- Responder conversaciones.
+
+## 6. Funciones generales disponibles
+
+El profesor tambien puede:
+
+- Buscar usuarios y ver perfiles.
+- Interactuar en funcionalidades sociales (amistades).
+- Cambiar su contraseña desde la aplicacion.
 
