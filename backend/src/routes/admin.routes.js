@@ -3,6 +3,7 @@ import { types } from "cassandra-driver";
 import { requireAuth } from "../middleware/requireAuth.js";
 import { requireAdmin } from "../middleware/requireAdmin.js";
 import { getCassandraClient } from "../config/cassandra.js";
+import { findUserRowByUsername } from "../services/authExtended.service.js";
 
 function ks() {
   return (process.env.CASSANDRA_KEYSPACE || "tec_digitalito").trim();
@@ -14,18 +15,32 @@ export function createAdminRouter() {
 
   router.get("/activity-log", async (req, res) => {
     try {
-      const userId = String(req.query.userId || "").trim();
-      if (!userId) {
-        return res.status(400).json({ error: "Query userId (uuid del usuario) es obligatorio." });
+      const userRef = String(req.query.userId || "").trim();
+      if (!userRef) {
+        return res
+          .status(400)
+          .json({ error: "Query userId es obligatorio (UUID o username)." });
       }
       const client = getCassandraClient();
       if (!client) {
         return res.status(503).json({ error: "Cassandra no disponible (¿AUTH_STORE=json?)." });
       }
+
+      let resolvedUserId = "";
+      try {
+        resolvedUserId = types.Uuid.fromString(userRef).toString();
+      } catch {
+        const row = await findUserRowByUsername(userRef);
+        if (!row?.userId) {
+          return res.status(404).json({ error: "Usuario no encontrado." });
+        }
+        resolvedUserId = row.userId;
+      }
+
       const rs = await client.execute(
         `SELECT event_time, event_type, ip_address, user_agent
          FROM ${ks()}.access_log WHERE user_id = ? LIMIT 200`,
-        [types.Uuid.fromString(userId)],
+        [types.Uuid.fromString(resolvedUserId)],
         { prepare: true }
       );
       const events = [];

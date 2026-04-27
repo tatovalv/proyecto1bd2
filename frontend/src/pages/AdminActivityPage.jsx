@@ -25,7 +25,7 @@ export default function AdminActivityPage() {
     setEvents(null);
     const id = userId.trim();
     if (!id) {
-      setErr("Indica el ID del usuario.");
+      setErr("Indica el ID o username del usuario.");
       return;
     }
     setLoading(true);
@@ -58,12 +58,12 @@ export default function AdminActivityPage() {
       <p className="text-slate-400 text-sm">Consulta actividad de acceso de un usuario específico.</p>
       <form onSubmit={onSearch} className="flex flex-wrap gap-2 items-end">
         <label className="flex-1 min-w-[240px] space-y-1 block">
-          <span className="text-xs text-slate-500">ID de usuario</span>
+          <span className="text-xs text-slate-500">ID o username</span>
           <input
             className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-white font-mono text-sm"
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
-            placeholder="ID del usuario"
+            placeholder="UUID o username (ej. stickvalv6)"
           />
         </label>
         <button
