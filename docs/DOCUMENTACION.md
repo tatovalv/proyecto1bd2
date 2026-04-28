@@ -1,9 +1,9 @@
-# TEC Digitalito — Documentacion esencial para entrega universitaria
+# TEC Digitalito
 
 ## 1. Informacion general
 
 - **Curso:** Bases de Datos II  
-- **Alumnos:** Luna Antonella Peraza, Luis Masis Perez, Juan Carlos Valverde
+- **Alumnos:** Luna Antonella Peraza, Luis Masís Pérez, Juan Carlos Valverde
 - **Profesor:** Erick Hernandez
 - **Proyecto:** Proyecto 1 — Plataforma educativa "TEC Digitalito"  
 - **Repositorio:** Proyecto local (`backend/` y `frontend/`)  
