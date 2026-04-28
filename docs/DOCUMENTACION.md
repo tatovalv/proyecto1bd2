@@ -124,6 +124,11 @@ Estos componentes comparten una característica: requieren guardar objetos con e
 
 ## 8. Conclusiones
 
-El proyecto demuestra una implementacion realista de arquitectura poliglota para un dominio educativo, combinando autenticacion segura, control por roles y persistencia especializada por tipo de dato.  
-La solucion cumple con los objetivos funcionales principales y ofrece una base solida para evolucion academica y tecnica.
+El desarrollo del proyecto “TEC Digitalito” permitió aplicar de forma práctica los conceptos de diseño y gestión de bases de datos en un entorno realista, integrando múltiples tecnologías para atender distintos tipos de requerimientos. Se evidenció la importancia de seleccionar cada base de datos según el comportamiento de los datos y no depender de una única solución.
+
+La adopción de una arquitectura poliglota, utilizando Apache Cassandra, Redis, Neo4j y MongoDB, permitió optimizar el manejo de información según su naturaleza, abarcando desde datos de alta escritura y sesiones en tiempo real, hasta relaciones complejas y estructuras documentales.
+
+Asimismo, el uso de entornos distribuidos mediante Docker y servicios en la nube facilitó la comprensión de aspectos clave como escalabilidad, disponibilidad y tolerancia a fallos, alineando la solución con escenarios reales de desarrollo.
+
+En conjunto, el sistema logra integrar de manera coherente sus diferentes módulos funcionales, demostrando que es posible combinar múltiples tecnologías manteniendo una arquitectura sólida y bien definida.
 
